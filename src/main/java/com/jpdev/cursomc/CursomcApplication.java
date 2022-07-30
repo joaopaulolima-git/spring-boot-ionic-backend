@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.jpdev.cursomc.domain.Categoria;
 import com.jpdev.cursomc.domain.Cidade;
+import com.jpdev.cursomc.domain.Cliente;
+import com.jpdev.cursomc.domain.Endereco;
 import com.jpdev.cursomc.domain.Estado;
 import com.jpdev.cursomc.domain.Produto;
+import com.jpdev.cursomc.enums.TipoCliente;
 import com.jpdev.cursomc.repositories.CategoriaRepository;
 import com.jpdev.cursomc.repositories.CidadeRepository;
+import com.jpdev.cursomc.repositories.ClienteRepository;
+import com.jpdev.cursomc.repositories.EnderecoRepository;
 import com.jpdev.cursomc.repositories.EstadoRepository;
 import com.jpdev.cursomc.repositories.ProdutoRepository;
 
@@ -30,6 +35,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -52,10 +63,17 @@ public class CursomcApplication implements CommandLineRunner {
 		Cidade c2 = new Cidade(null, "São Paulo", est2);
 		Cidade c3 = new Cidade(null, "Campinas", est2);
 		
+		Cliente cli1 = new Cliente(null, "Maria", "maria@gmail.com", "123456789", TipoCliente.PESSOAFISICA);
+		
+		cli1.getTelefones().addAll(Arrays.asList("5468546", "87654236"));
+		
+		Endereco e1 = new Endereco(null, "Rua das Flores", "1450", "ap423", "Centro", "1965482", cli1, c3);
+		Endereco e2 = new Endereco(null, "Av Brasil", "1000", "ap758", "Faria Lima", "5546982", cli1, c2);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		
 		est1.getCidades().addAll(Arrays.asList(c1));
-		est2.getCidades().addAll(Arrays.asList(c2,c3));
-		
-		
+		est2.getCidades().addAll(Arrays.asList(c2,c3));		
 		
 		cat1.getProdutos().addAll(Arrays.asList(p1,p2,p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2));
@@ -68,6 +86,8 @@ public class CursomcApplication implements CommandLineRunner {
 		produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 		
 	}
 
